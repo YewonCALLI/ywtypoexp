@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA font</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+        }
+        
+        #canvas-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 0;
+            border-top: 1px solid #e0e0e0;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .controls-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-group.title {
+            flex: 0 0 auto;
+            margin-right: auto;
+        }
+        
+        h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: #222;
+        }
+        
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin: 0;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #000;
+            color: white;
+            border: 1px solid #000;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        button:hover {
+            background-color: #fff;
+            color: #000;
+        }
+        
+        .save-button {
+            background-color: transparent;
+            color: #000;
+            border: 1px solid #000;
+        }
+        
+        .save-button:hover {
+            background-color: #000;
+            color: #fff;
+        }
+        
+        .status {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .drawing-indicator {
+            width: 10px;
+            height: 10px;
+            background-color: #0f0;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 5px;
+        }
+        
+        .drawing-indicator.inactive {
+            background-color: #ccc;
+        }
+        
+        .hint {
+            font-size: 11px;
+            color: #888;
+            margin-left: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .controls-wrapper {
+                justify-content: center;
+                text-align: center;
+            }
+            
+            .control-group.title {
+                flex: 1 1 100%;
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .control-group {
+                flex: 0 1 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <div id="controls">
+            <div class="controls-wrapper">
+                <div class="control-group title">
+                    <h2>ORGANIC TYPOGRAPHY</h2>
+                </div>
+                
+                <div class="control-group">
+                    <span class="status" id="status">DRAWING MODE</span>
+                    <span class="drawing-indicator" id="indicator"></span>
+                </div>
+                
+                <div class="control-group">
+                    <button onclick="toggleDrawing()">NEW LETTER (T)</button>
+                </div>
+                
+                <div class="control-group">
+                    <button onclick="undoLastPoint()">UNDO (CTRL+Z)</button>
+                </div>
+                
+                <div class="control-group">
+                    <button onclick="clearAll()">CLEAR ALL</button>
+                </div>
+                
+                <div class="control-group">
+                    <button class="save-button" onclick="saveImage()">SAVE</button>
+                </div>
+                
+                <div class="control-group">
+                    <span class="hint">CLICK TO ADD POINTS</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let letterSets = [];
+        let currentLetterPoints = [];
+        let colors = [];
+        let isDrawing = true;
+        let canvas;
+
+        function setup() {
+            canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('canvas-container');
+            colorMode(HSB, 360, 100, 100, 1.0);
+            background(0, 0, 95);
+        }
+
+        function draw() {
+            background(0, 0, 95);
+            
+            // 저장된 모든 글자 그리기
+            letterSets.forEach((points, i) => {
+                if (points.length >= 2) {
+                    drawOrganicConnections(points, colors[i]);
+                }
+                // 각 점 표시
+                points.forEach(point => {
+                    fill(colors[i]);
+                    noStroke();
+                    circle(point.x, point.y, 20);
+                });
+            });
+            
+            // 현재 그리고 있는 글자 그리기
+            if (currentLetterPoints.length >= 2) {
+                drawOrganicConnections(currentLetterPoints, color(280, 80, 90));
+            }
+            currentLetterPoints.forEach(point => {
+                fill(280, 80, 90);
+                noStroke();
+                circle(point.x, point.y, 20);
+            });
+        }
+
+        function drawOrganicConnections(points, pointColor) {
+            blendMode(MULTIPLY);
+            noStroke();
+            
+            for (let i = 0; i < points.length - 1; i++) {
+                let p1 = points[i];
+                let p2 = points[i + 1];
+                let d = dist(p1.x, p1.y, p2.x, p2.y);
+                
+                // 두 점 사이를 여러 개의 원으로 채우기
+                let steps = floor(d / 5);
+                for (let j = 0; j <= steps; j++) {
+                    let t = j / steps;
+                    let x = lerp(p1.x, p2.x, t);
+                    let y = lerp(p1.y, p2.y, t);
+                    
+                    let wobble = sin(frameCount * 0.05 + j * 0.5) * 5;
+                    
+                    for (let size = d * 0.4; size > 0; size -= 8) {
+                        let alpha = map(size, 0, d * 0.4, 0.1, 0.02);
+                        let drawColor = color(hue(pointColor), saturation(pointColor), brightness(pointColor), alpha);
+                        fill(drawColor);
+                        
+                        let offsetX = sin(t * PI + frameCount * 0.02) * 10;
+                        let offsetY = cos(t * PI + frameCount * 0.02) * 10;
+                        
+                        circle(x + offsetX, y + offsetY + wobble, size);
+                    }
+                }
+            }
+            
+            blendMode(BLEND);
+        }
+
+        function mousePressed() {
+            // 하단 컨트롤 바의 높이 확인 (약 80px)
+            const controlsHeight = document.getElementById('controls').offsetHeight;
+            
+            // 마우스가 하단 컨트롤 바 영역 밖에 있을 때만 점 추가
+            if (isDrawing && mouseY < windowHeight - controlsHeight) {
+                currentLetterPoints.push({
+                    x: mouseX,
+                    y: mouseY
+                });
+            }
+        }
+
+        function keyPressed() {
+            if (key === ' ') {
+                clearAll();
+            } else if (key === 'z' && (keyIsDown(CONTROL) || keyIsDown(META))) {
+                undoLastPoint();
+            } else if (key === 't' || key === 'T') {
+                toggleDrawing();
+            } else if (key === 's' || key === 'S') {
+                saveImage();
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+
+        // UI 버튼 함수들
+        function toggleDrawing() {
+            if (isDrawing && currentLetterPoints.length > 0) {
+                // 현재 글자 저장
+                letterSets.push([...currentLetterPoints]);
+                colors.push(color(random(360), 80, 90));
+                currentLetterPoints = [];
+                isDrawing = false;
+                updateStatus();
+            } else {
+                // 새로운 글자 그리기 시작
+                isDrawing = true;
+                updateStatus();
+            }
+        }
+
+        function undoLastPoint() {
+            if (isDrawing && currentLetterPoints.length > 0) {
+                currentLetterPoints.pop();
+            }
+        }
+
+        function clearAll() {
+            letterSets = [];
+            colors = [];
+            currentLetterPoints = [];
+            background(0, 0, 95);
+            isDrawing = true;
+            updateStatus();
+        }
+
+        function saveImage() {
+            saveCanvas('organic-typography', 'jpg');
+        }
+
+        function updateStatus() {
+            const statusElement = document.getElementById('status');
+            const indicatorElement = document.getElementById('indicator');
+            
+            if (isDrawing) {
+                statusElement.textContent = 'DRAWING MODE';
+                indicatorElement.classList.remove('inactive');
+            } else {
+                statusElement.textContent = 'PAUSED';
+                indicatorElement.classList.add('inactive');
+            }
+        }
+    </script>
+</body>
+</html>

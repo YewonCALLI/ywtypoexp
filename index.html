@@ -3,383 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>솜사탕 폰트</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@900&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <title>Typography Experiments Hall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            font-family: 'Nanum Square', Arial, sans-serif;
-        }
-        
-        #canvas-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-        }
-        
-        #controls {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px 0;
-            border-top: 1px solid #e0e0e0;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        
-        .controls-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .control-group.title {
-            flex: 0 0 auto;
-            margin-right: auto;
-        }
-        
-        h2 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 700;
-            color: #222;
-        }
-        
-        label {
-            font-size: 14px;
-            font-weight: 600;
-            color: #666;
-            margin: 0;
-        }
-        
-        input[type="text"] {
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 0;
             box-sizing: border-box;
-            font-size: 14px;
-            width: 200px;
-            transition: border-color 0.3s;
         }
         
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #000;
-        }
-        
-        .color-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        input[type="color"] {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #ddd;
-            border-radius: 0;
-            cursor: pointer;
-            padding: 2px;
-            transition: border-color 0.3s;
-        }
-        
-        input[type="color"]:hover {
-            border-color: #000;
-        }
-        
-        button {
-            padding: 10px 20px;
-            background-color: #000;
-            color: white;
-            border: 1px solid #000;
-            border-radius: 0;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        button:hover {
-            background-color: #fff;
-            color: #000;
-        }
-        
-        .save-button {
-            background-color: transparent;
-            color: #000;
-            border: 1px solid #000;
-        }
-        
-        .save-button:hover {
+        body {
+            font-family: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
             background-color: #000;
             color: #fff;
+            overflow-x: hidden;
         }
         
-        small {
-            display: none;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+        
+        header {
+            margin-bottom: 100px;
+        }
+        
+        h1 {
+            font-size: 72px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            line-height: 0.9;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        
+        .experiments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2px;
+            margin-bottom: 100px;
+        }
+        
+        .experiment-card {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            transition: border-color 0.3s, background-color 0.3s;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .experiment-card:hover {
+            border-color: #fff;
+            background-color: #111;
+        }
+        
+        .card-image {
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            background-color: #050505;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+
+            transition: filter 0.3s;
+        }
+
+        .placeholder {
+            color: #333;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 700;
+        }
+        
+        .card-content {
+            padding: 25px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .card-description {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        .card-tech {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .tech-tag {
+            padding: 4px 10px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border: 1px solid #333;
+            color: #999;
+        }
+        
+        .view-button {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #fff;
+            text-decoration: none;
+            position: relative;
+            padding-bottom: 2px;
+        }
+        
+        .view-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #fff;
+            transition: width 0.3s;
+        }
+        
+        .experiment-card:hover .view-button::after {
+            width: 100%;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            border-top: 1px solid #1a1a1a;
+        }
+        
+        footer p {
+            color: #444;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .experiment-number {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 48px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.1);
+            z-index: 1;
         }
         
         @media (max-width: 768px) {
-            .controls-wrapper {
-                justify-content: center;
-                text-align: center;
+            .experiments-grid {
+                grid-template-columns: 1fr;
+                gap: 1px;
             }
             
-            .control-group.title {
-                flex: 1 1 100%;
-                margin-right: 0;
-                margin-bottom: 15px;
+            h1 {
+                font-size: 48px;
             }
             
-            .control-group {
-                flex: 0 1 auto;
+            .container {
+                padding: 60px 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div id="canvas-container">
-        <div id="controls">
-            <div class="controls-wrapper">
-                <div class="control-group title">
-                    <h2>Cotton Candy Font</h2>
+    <div class="container">
+        <header>
+            <h1>Ye￦<br>TYPO experiment</h1>
+            <a class="subtitle" href='https://www.instagram.com/yewon.calli/'>@yewon.calli</a>
+        </header>
+        
+        <div class="experiments-grid">
+            <div class="experiment-card" onclick="window.location.href='cotton.html'">
+                <div class="card-image">
+                    <span class="experiment-number">01</span>
+                    <img src="/1.gif" alt="Text Particles" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="placeholder" style="display:none;"></span>
                 </div>
-                
-                <div class="control-group">
-                    <label for="text-input">TEXT</label>
-                    <input type="text" id="text-input" value="Cotton" maxlength="10">
-                </div>
-                
-                <div class="control-group">
-                    <label>OUTLINE 1</label>
-                    <div class="color-group">
-                        <input type="color" id="color1" value="#ce0deb">
+                <div class="card-content">
+                    <h2 class="card-title">솜사탕 폰트</h2>
+                    <div class="card-tech">
+                        <span class="tech-tag">p5.js</span>
+                        <span class="tech-tag">Particles</span>
                     </div>
+                    <a href="/cotton.html" class="view-button">View Project →</a>
                 </div>
-                
-                <div class="control-group">
-                    <label>OUTLINE 2</label>
-                    <div class="color-group">
-                        <input type="color" id="color2" value="#c89600">
+            </div>
+            
+            <div class="experiment-card" onclick="window.location.href='/connection.html'">
+                <div class="card-image">
+                    <span class="experiment-number">02</span>
+                    <img src="/Frame 22.png" alt="Typography Connections" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="placeholder" style="display:none;"></span>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">쭈글쭈글 폰트</h2>
+                    <div class="card-tech">
+                        <span class="tech-tag">p5.js</span>
+                        <span class="tech-tag">Grid</span>
                     </div>
+                    <a href="/connection.html" class="view-button">View Project →</a>
                 </div>
-                
-                <div class="control-group" style="display: none;">
-                    <label>FILL</label>
-                    <div class="color-group">
-                        <input type="color" id="color3" value="#009600">
+            </div>
+            
+            <div class="experiment-card" onclick="window.location.href='dna.html'">
+                <div class="card-image">
+                    <span class="experiment-number">03</span>
+                    <img src="/3.gif" alt="Organic Typography" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="placeholder" style="display:none;"></span>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">DNA 폰트</h2>
+                    <div class="card-tech">
+                        <span class="tech-tag">p5.js</span>
+                        <span class="tech-tag">Drawing</span>
                     </div>
-                </div>
-                
-                <div class="control-group">
-                    <button onclick="updateText()">APPLY</button>
-                </div>
-                
-                <div class="control-group">
-                    <button class="save-button" onclick="saveImage()">SAVE</button>
+                    <a href="/dna.html" class="view-button">View Project →</a>
                 </div>
             </div>
         </div>
+        
+        <footer>
+            <p>© 2025 Yewon Jang</p>
+        </footer>
     </div>
-
+    
     <script>
-        let font;
-        let userInput = 'Cotton';
-        let points = [];
-        let internalPoints = [];
-        let font_size = 380;
-        let leap = 10;
-        let numInternalPoints = 5000;
-        let bounds;
-        let originalPoints = [];
-        let originalInternalPoints = [];
-        let color1 = [206, 13, 235]; // 외곽선 색상 1 (보라색)
-        let color2 = [200, 150, 0];  // 외곽선 색상 2 (노란색/주황색)
-        let color3 = [0, 150, 0];    // 내부 채우기 색상 (초록색)
-        let canvas;
-
-        function preload() {
-            // 웹폰트 사용 - 다른 CDN 경로 시도
-            font = loadFont('https://fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.ttf', 
-                // 성공 콜백
-                () => console.log('Font loaded successfully'),
-                // 실패 콜백 - 기본 폰트 사용
-                () => {
-                    console.log('Font failed to load, using default font');
-                    textFont('Arial'); // 기본 폰트로 대체
+        document.querySelectorAll('.experiment-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.classList.contains('view-button')) {
+                    return;
                 }
-            );
-        }
-
-        function setup() {
-            // 캔버스를 화면 크기에 맞춤
-            canvas = createCanvas(windowWidth, windowHeight);
-            canvas.parent('canvas-container');
-            
-            noFill();
-            background(255);
-            frameRate(5);
-            
-            // 폰트가 로드되지 않았을 경우 기본 폰트 사용
-            if (!font) {
-                font = loadFont('Arial');
-                textFont('Arial');
-            }
-            
-            setupText();
-        }
-
-        function setupText() {
-            // 폰트가 없을 경우를 대비한 안전장치
-            if (!font) {
-                console.error('Font not loaded');
-                return;
-            }
-            
-            // 텍스트 크기 조정
-            textFont(font);
-            textSize(font_size);
-            
-            // 텍스트를 화면 중앙에 배치
-            let textW = textWidth(userInput);
-            let x = (width - textW) / 2;
-            let y = height / 2 + font_size / 3;
-            
-            // 문자의 점들 추출
-            points = font.textToPoints(userInput, x, y, font_size, {
-                sampleFactor: 0.1,
-                simplifyThreshold: 0
+                const button = this.querySelector('.view-button');
+                if (button) {
+                    window.location.href = button.href;
+                }
             });
-            
-            // 원본 포인트 위치 저장
-            originalPoints = points.map(pt => ({x: pt.x, y: pt.y}));
-            
-            bounds = font.textBounds(userInput, x, y, font_size);
-            generateInternalPoints(bounds);
-            
-            // 원본 내부 포인트 위치 저장
-            originalInternalPoints = internalPoints.map(pt => createVector(pt.x, pt.y));
-        }
-
-        function generateInternalPoints(bounds) {
-            internalPoints = [];
-            for (let i = 0; i < numInternalPoints; i++) {
-                let px = random(bounds.x, bounds.x + bounds.w);
-                let py = random(bounds.y, bounds.y + bounds.h);
-                if (isInsideText(px, py)) {
-                    internalPoints.push(createVector(px, py));
-                }
-            }
-        }
-
-        function isInsideText(px, py) {
-            for (let pt of originalPoints) {
-                let d = dist(px, py, pt.x, pt.y);
-                if (d < leap) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        function draw() {
-            background(255);
-            
-            // 배경 점들 (원래 코드에서 흰색으로 설정된 부분)
-            for (let i = 0; i < points.length; i++) {
-                let pt = points[i];
-                let origPt = originalPoints[i];
-                
-                pt.x = origPt.x + random(-leap, leap);
-                pt.y = origPt.y + random(-leap, leap);
-                
-                stroke(255, 255, 255, 100);
-                fill(255, 255, 255, 100);
-                strokeWeight(10);
-                point(pt.x, pt.y);
-            }
-            
-            // 내부 점들 (color2로 스트로크, color3으로 채우기)
-            for (let i = 0; i < internalPoints.length; i++) {
-                let pt = internalPoints[i];
-                let origPt = originalInternalPoints[i];
-                
-                pt.x = origPt.x + random(-leap/2, leap/2);
-                pt.y = origPt.y + random(-leap/2, leap/2);
-                
-                stroke(color2[0], color2[1], color2[2], 100);
-                fill(color3[0], color3[1], color3[2], 100);
-                strokeWeight(10);
-                point(pt.x, pt.y);
-            }
-            
-            // 외곽선 점들 (color1 사용)
-            for (let i = 0; i < points.length; i++) {
-                let pt = points[i];
-                stroke(color1[0], color1[1], color1[2], 100);
-                fill(color1[0], color1[1], color1[2], 100);
-                strokeWeight(15);
-                point(pt.x, pt.y);
-            }
-        }
-
-        function windowResized() {
-            resizeCanvas(windowWidth, windowHeight);
-            setupText();
-        }
-
-        function keyPressed() {
-            if (key === 's' || key === 'S') {
-                saveImage();
-            }
-        }
-
-        function updateText() {
-            let newText = document.getElementById('text-input').value.trim();
-            if (newText && newText !== userInput) {
-                userInput = newText;
-                setupText();
-            }
-            
-            // 색상 업데이트
-            let hex1 = document.getElementById('color1').value;
-            let hex2 = document.getElementById('color2').value;
-            let hex3 = document.getElementById('color3').value;
-            
-            color1 = hexToRgb(hex1);
-            color2 = hexToRgb(hex2);
-            color3 = hexToRgb(hex3);
-        }
-
-        function hexToRgb(hex) {
-            let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? [
-                parseInt(result[1], 16),
-                parseInt(result[2], 16),
-                parseInt(result[3], 16)
-            ] : [0, 0, 0];
-        }
-
-        function saveImage() {
-            saveCanvas('text-particles', 'jpg');
-        }
+        });
     </script>
 </body>
 </html>
